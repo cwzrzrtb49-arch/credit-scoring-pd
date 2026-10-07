@@ -1,0 +1,6 @@
+"metric","value"
+"AUC logit",0.752
+"Gini logit",0.504
+"KS logit",0.39
+"AUC lasso",0.746
+"Gini lasso",0.493

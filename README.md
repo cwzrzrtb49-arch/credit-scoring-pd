@@ -1,0 +1,67 @@
+# Credit Scoring: Probability of Default (PD) Model in R
+
+Academic project applying supervised classification methods to credit risk.
+Built on the German Credit dataset (UCI Statlog, 1,000 loans, 20 predictors).
+
+## Objective
+Estimate the probability of default (PD) of a borrower, evaluate the model with
+standard credit-risk metrics, and link the result to the Basel framework
+(Expected Loss = PD x LGD x EAD).
+
+## Method
+1. Data preparation: target definition (1 = default), merging of rare categories
+2. Stratified 70/30 train/test split
+3. Logistic regression (standard approach for PD / scorecard models)
+4. Lasso-regularised logistic regression (cross-validated) for variable selection
+5. Evaluation: AUC, Gini, KS, confusion matrix at different cut-offs
+6. Calibration: predicted PD vs observed default rate by rating class
+7. Expected Loss on the test portfolio
+8. Monte Carlo simulation (10,000 runs) of the portfolio loss distribution: mean loss, 99% VaR and Expected Shortfall
+
+## Results
+Test set: 300 loans (stratified 70/30 split). Plots and tables are in the `output` files.
+
+| Metric | Logistic | Lasso |
+|---|---|---|
+| AUC | 0.752 | 0.746 |
+| Gini | 0.504 | 0.493 |
+| KS | 0.390 | - |
+
+Other findings:
+- At cut-off 0.30 the model flags 68% of defaulters (vs 47% at 0.50), at the cost of more false alarms.
+- Lasso keeps 20 of 45 variables with almost the same discriminatory power.
+- Calibration: predicted PDs are slightly too low for the safest class and too high for the riskiest (60 loans per class, so noisy).
+- Expected loss on the test portfolio: 153,134 on 988,191 of exposure (15.5%).
+- Monte Carlo (10,000 runs): mean loss 153,043; 99% VaR 185,482; 99% Expected Shortfall 190,258.
+
+## Link to Basel
+- **PD** is the output of the model. Under IRB approaches banks estimate it
+  internally, and it must be calibrated to long-run default rates.
+- **LGD** is fixed at 45% (Foundation IRB, senior unsecured) as an illustrative
+  assumption, not estimated.
+- **EAD** is set equal to the loan amount (fully drawn instalment loans).
+- Expected Loss = PD x LGD x EAD, computed per loan and aggregated.
+
+## Limitations
+- The dataset has a ~30% default rate, much higher than a real bank portfolio,
+  so absolute PDs are not realistic. Ranking power (AUC/Gini) is the meaningful
+  result; a real model would need recalibration to the portfolio's central tendency.
+- Small sample (300 test observations): metrics have wide confidence intervals.
+- The Monte Carlo assumes independent defaults (no correlation, no systematic factor), so tail losses are underestimated compared with a real portfolio.
+- No out-of-time validation, no stress scenarios, no LGD/EAD models.
+
+## Possible extensions
+Stress test (shift key variables and re-estimate PD), IFRS 9 staging,
+LGD model, WoE/IV scorecard.
+
+## Data
+German Credit (Statlog), UCI Machine Learning Repository:
+https://archive.ics.uci.edu/dataset/144/statlog+german+credit+data
+Download the file `german.data` (not included in this repository).
+
+## How to run
+1. Open the R script in RStudio.
+2. Click Source. A window opens: select the downloaded `german.data` file.
+3. The script prints the results in the console and saves plots and tables in the `output` folder.
+
+Requires R with the packages `pROC` and `glmnet` (installed automatically).
