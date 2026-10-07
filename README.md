@@ -1,34 +1,22 @@
-# PD Model in R
+# Credit Scoring: Probability of Default (PD) Model in R
 
-Academic project for the application of supervised learning techniques to the problem of credit risk.
+Academic project applying supervised classification methods to credit risk.
 Built on the German Credit dataset (UCI Statlog, 1,000 loans, 20 predictors).
 
 ## Objective
-Calculate the probability of default (PD) of the borrower, assess the model using
-standard credit-risk metrics and interpret the result in terms of the Basel framework
+Estimate the probability of default (PD) of a borrower, evaluate the model with
+standard credit-risk metrics, and link the result to the Basel framework
 (Expected Loss = PD x LGD x EAD).
 
-## Approach
-1. Data preprocessing: target definition (1 = default), aggregation of rare categories
-2. Stratified train/test split 70%/30%
-3. Logistic regression (the standard method for PD or scorecard models)
-4. Lasso-penalized logistic regression (cross-validated) for feature selection
-5. Model assessment: AUC, Gini, KS, confusion matrix at different cut-offs
-6. Calibration: predicted PD vs observed default rate by ratings class
+## Method
+1. Data preparation: target definition (1 = default), merging of rare categories
+2. Stratified 70/30 train/test split
+3. Logistic regression (standard approach for PD / scorecard models)
+4. Lasso-regularised logistic regression (cross-validated) for variable selection
+5. Evaluation: AUC, Gini, KS, confusion matrix at different cut-offs
+6. Calibration: predicted PD vs observed default rate by rating class
 7. Expected Loss on the test portfolio
-8. Monte Carlo simulation (10,000 iterations) of the portfolio loss distribution:
-mean loss, 99% VaR and 99% Expected Shortfall
-
-## Results
-Test dataset: 300 loans (stratified 70%/30% split). Plots and tables are available in the `output` directory.
-
-|Metric|Logistic|Lasso|
-|---|---|---|
-|AUC|0.752|0.746|
-|Gini|0.504|0.493|
-|KS|-|0.390|
-Other findings:
-- At the cut-off level 0.30 the model identifies 68% of defaulters (vs 47% at 0.50), though at the expense
+8. Monte Carlo simulation (10,000 runs) of the portfolio loss distribution: mean loss, 99% VaR and Expected Shortfall
 
 ## Results
 Test set: 300 loans (stratified 70/30 split). Plots and tables are in the `output` files.
